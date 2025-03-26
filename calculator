@@ -1,0 +1,57 @@
+import tkinter as tk
+
+# Functionality for button clicks
+def button_click(value):
+    if value == "AC":
+        entry.delete(0, tk.END)
+    else:
+        entry.insert(tk.END, value)
+
+def calculate():
+    try:
+        result = eval(entry.get())
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, result)
+    except Exception:
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, "Error")
+
+# Create main window
+root = tk.Tk()
+root.title("Calculator")
+root.config(bg="black")
+root.geometry("250x400")
+
+# Entry widget
+entry = tk.Entry(root, font=("Arial", 20), bg="black", fg="white", bd=0, justify=tk.RIGHT)
+entry.grid(row=0, column=0, columnspan=4, sticky="nsew", padx=5, pady=10)
+
+# Button specifications
+buttons = [
+    ["AC", "%", "/", "*"],
+    ["7", "8", "9", "-"],
+    ["4", "5", "6", "+"],
+    ["1", "2", "3", "="],
+    ["0", None, None, "."],
+]
+
+button_colors = {"AC": "gray", "%": "gray", "+": "orange", "-": "orange", "*": "orange", "/": "orange", "=": "orange", ".": "gray"}
+
+# Create buttons
+def create_buttons():
+    for r, row in enumerate(buttons):
+        for c, btn_text in enumerate(row):
+            if btn_text:
+                color = button_colors.get(btn_text, "gray")
+                action = lambda val=btn_text: calculate() if val == "=" else button_click(val)
+                button = tk.Button(root, text=btn_text, font=("Arial", 18), bg=color, fg="white", bd=0, command=action)
+                button.grid(row=r + 1, column=c, sticky="nsew", padx=2, pady=2)
+
+# Configure grid to be responsive
+for i in range(5):
+    root.grid_rowconfigure(i, weight=1)
+    root.grid_columnconfigure(i, weight=1)
+
+create_buttons()
+
+root.mainloop()
